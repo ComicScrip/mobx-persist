@@ -39,10 +39,12 @@ export function create({
     debounce = 0
 }: any = {}) {
     if (typeof localStorage !== 'undefined' && localStorage === storage) storage = Storage
-    return function hydrate<T extends Object>(key: string, store: T, initialState: any = {}, customArgs: any = {}): IHydrateResult<T> {
-        const schema = getDefaultModelSchema(store as any)
-        function hydration() {
-            const promise: IHydrateResult<T> = storage.getItem(key)
+    return function hydrate<T extends Object>(key: string, store: T, persistKey: string = '', initialState: any = {}, customArgs: any = {}): IHydrateResult<T> {
+      const schema = getDefaultModelSchema(store as any)
+      const _persistKey = persistKey === '' ? key : persistKey
+
+      function hydration() {
+            const promise: IHydrateResult<T> = storage.getItem(_persistKey)
             .then((d: any) => !jsonify ? d : JSON.parse(d))
             .then(action(
                 `[mobx-persist ${key}] LOAD_DATA`,
@@ -60,7 +62,7 @@ export function create({
         const result = hydration()
         reaction(
             () => serialize(schema, store),
-            (data: any) => storage.setItem(key, !jsonify ? data : JSON.stringify(data)),
+            (data: any) => storage.setItem(_persistKey, !jsonify ? data : JSON.stringify(data)),
             {
                 delay: debounce
             }

@@ -121,6 +121,7 @@ setTimeout(() => {
     - **hydrate** *function* `hydrate(key, store, initialState?, customArgs?)`
       - **key** *string* The key of your datastore that you want to hydrate from your persisted record.
       - **store** *object* The store in which that key resides.
+      - **peristKey** *string* Optional the storage key under which data will be persisted and rehydrated. If none s provided, *key* will be used instead.
       - **initialState** *object* Optional initial state the store is seeded with.
       - **customArgs** *object* Optional custom arguments that are available during the deserialization process which can be used to pass in e.g. stores to model constructors during deserialization. See https://github.com/mobxjs/serializr#6-use-custom-arguments-to-inject-stores-to-models
       - returns *IHydrateResult*

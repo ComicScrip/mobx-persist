@@ -14,6 +14,15 @@ export function persist(target: Object, key: string, baseDescriptor?: PropertyDe
 export function persist(schema: Object): <T>(target: T) => T // object
 export function persist(...args: any[]): any {
     const [a, b, c] = args
+    const constructor = a.constructor as any
+
+    if (constructor) {
+      if(!constructor._persistedProps) {
+        constructor._persistedProps = []
+      }
+      constructor._persistedProps.push(b)
+    }
+
     if (a in types) {
         return serializable(types[a](b))
     } else if (args.length === 1) {

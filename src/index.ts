@@ -1,4 +1,4 @@
-import { reaction, action } from 'mobx'
+import {reaction, action, IReactionDisposer} from 'mobx'
 import {
     serialize, deserialize,
     update,
@@ -39,7 +39,8 @@ export interface optionsType {
 }
 
 export interface IHydrateResult<T> extends Promise<T> {
-    rehydrate: () => IHydrateResult<T>
+    rehydrate: () => IHydrateResult<T>,
+    hydrationDisposer: IReactionDisposer
 }
 
 export function create({
@@ -69,7 +70,7 @@ export function create({
             return promise
         }
         const result = hydration()
-        reaction(
+        result.hydrationDisposer = reaction(
             () => serialize(schema, store),
             (data: any) => storage.setItem(_persistKey, !jsonify ? data : JSON.stringify(data)),
             {

@@ -1,3 +1,4 @@
+import { IReactionDisposer } from 'mobx';
 import { Types } from './types';
 export declare function persist(type: Types, schema?: any): (target: Object, key: string, baseDescriptor?: PropertyDescriptor) => void;
 export declare function persist(target: Object, key: string, baseDescriptor?: PropertyDescriptor): void;
@@ -9,5 +10,6 @@ export interface optionsType {
 }
 export interface IHydrateResult<T> extends Promise<T> {
     rehydrate: () => IHydrateResult<T>;
+    hydrationDisposer: IReactionDisposer;
 }
 export declare function create({ storage, jsonify, debounce }?: any): <T extends Object>(key: string, store: T, persistKey?: string, initialState?: any, customArgs?: any) => IHydrateResult<T>;
